@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08151d" />
+    <meta
+      name="description"
+      content="Echoes of the Wildgear — a tiny, repeatable turn-based browser JRPG battle."
+    />
+    <title>Echoes of the Wildgear</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-glow" aria-hidden="true"></div>
+
+    <main class="game-shell">
+      <header class="game-header">
+        <div class="brand-lockup">
+          <div class="brand-rune" aria-hidden="true">✦</div>
+          <div>
+            <p class="eyebrow">A micro JRPG battle</p>
+            <h1>Echoes of the Wildgear</h1>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="run-counter" aria-label="Victories this run">
+            <span>Run victories</span>
+            <strong id="winCount">00</strong>
+          </div>
+          <button
+            class="sound-toggle"
+            id="soundToggle"
+            type="button"
+            aria-label="Toggle music and sound effects"
+            aria-pressed="true"
+          >
+            <span aria-hidden="true">♪</span>
+            <span id="soundLabel">Sound on</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="battle-frame" aria-label="Battle arena">
+        <div class="battle-stage" id="battleStage">
+          <div class="stage-shade" aria-hidden="true"></div>
+          <div class="stage-grain" aria-hidden="true"></div>
+
+          <div class="location-chip">
+            <span class="location-pip" aria-hidden="true"></span>
+            <div>
+              <span>Twilight wilds</span>
+              <strong>Chronovale Ruins</strong>
+            </div>
+          </div>
+
+          <div class="turn-chip" id="turnChip">
+            <span class="turn-orbit" aria-hidden="true"></span>
+            <span id="turnText">Your turn</span>
+          </div>
+
+          <section class="enemy-hud" aria-label="Enemy status">
+            <div class="hud-heading">
+              <div>
+                <span id="enemyLevel">LV 1</span>
+                <strong id="enemyName">RUINMAW</strong>
+              </div>
+              <span class="enemy-state" id="enemyState">HOSTILE</span>
+            </div>
+            <div class="meter enemy-meter" aria-label="Enemy health">
+              <span id="enemyHpBar"></span>
+            </div>
+            <div class="meter-numbers">
+              <span>VITALITY</span>
+              <span><b id="enemyHp">150</b> / <span id="enemyMaxHp">150</span></span>
+            </div>
+          </section>
+
+          <div class="combatant hero-combatant" id="heroCombatant">
+            <div class="combat-shadow" aria-hidden="true"></div>
+            <img src="assets/lyra.png" alt="Lyra, a swordswoman in a teal cloak" />
+          </div>
+
+          <div class="combatant enemy-combatant" id="enemyCombatant">
+            <div class="combat-shadow" aria-hidden="true"></div>
+            <img src="assets/ruinmaw.png" alt="Ruinmaw, a mossy clockwork beast" />
+          </div>
+
+          <div class="battle-callout" id="battleCallout" aria-live="polite"></div>
+          <div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+
+          <div class="result-screen" id="resultScreen" hidden>
+            <div class="result-sunburst" aria-hidden="true"></div>
+            <div class="result-card">
+              <p class="result-kicker" id="resultKicker">Battle complete</p>
+              <h2 id="resultTitle">Victory!</h2>
+              <p id="resultCopy">The wildgear falls silent beneath the moon.</p>
+              <div class="result-stats" id="resultStats"></div>
+              <button class="result-button" id="resultButton" type="button">
+                Venture onward
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="command-deck">
+          <section class="hero-status" aria-label="Lyra's status">
+            <div class="hero-portrait">
+              <img src="assets/lyra.png" alt="" />
+            </div>
+            <div class="status-content">
+              <div class="status-name">
+                <div>
+                  <span>TIME WANDERER</span>
+                  <strong>LYRA</strong>
+                </div>
+                <span class="level-badge" id="heroLevel">LV 8</span>
+              </div>
+
+              <div class="status-row">
+                <span class="stat-label">HP</span>
+                <div class="meter"><span id="heroHpBar"></span></div>
+                <strong><span id="heroHp">120</span><small> / 120</small></strong>
+              </div>
+              <div class="status-row tp-row">
+                <span class="stat-label">TP</span>
+                <div class="meter"><span id="heroTpBar"></span></div>
+                <strong><span id="heroTp">20</span><small> / 20</small></strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="command-panel" aria-label="Battle commands">
+            <div class="message-strip">
+              <span class="message-sigil" aria-hidden="true">◆</span>
+              <p id="battleMessage" aria-live="polite">A Ruinmaw blocks the moonlit path.</p>
+              <span class="round-label" id="roundLabel">ROUND 01</span>
+            </div>
+
+            <div class="command-view" id="mainCommands">
+              <button class="command attack-command" type="button" data-action="attack">
+                <span class="command-icon" aria-hidden="true">⚔</span>
+                <span class="command-copy">
+                  <strong>Attack</strong>
+                  <small><span>Weapon strike</span><span>Restore 2 TP</span></small>
+                </span>
+                <kbd>A</kbd>
+              </button>
+              <button class="command" type="button" data-action="arts">
+                <span class="command-icon" aria-hidden="true">✦</span>
+                <span class="command-copy">
+                  <strong>Arts</strong>
+                  <small><span>Temporal techniques</span><span>Spend TP</span></small>
+                </span>
+                <kbd>S</kbd>
+              </button>
+              <button class="command" type="button" data-action="guard">
+                <span class="command-icon" aria-hidden="true">◈</span>
+                <span class="command-copy">
+                  <strong>Guard</strong>
+                  <small><span>Reduce the next hit</span><span>Restore 4 TP</span></small>
+                </span>
+                <kbd>D</kbd>
+              </button>
+              <button class="command" type="button" data-action="item">
+                <span class="command-icon" aria-hidden="true">✚</span>
+                <span class="command-copy">
+                  <strong>Item</strong>
+                  <small><span>Restore 50 HP</span><span><span id="tonicCount">2</span> tonics left</span></small>
+                </span>
+                <kbd>F</kbd>
+              </button>
+            </div>
+
+            <div class="command-view arts-view" id="artsCommands" hidden>
+              <button class="command art-command" type="button" data-art="arcSlash" data-cost="6">
+                <span class="command-icon flame" aria-hidden="true">⌁</span>
+                <span class="command-copy"><strong>Arc Slash</strong><small>Heavy physical damage</small></span>
+                <span class="cost">6 TP</span>
+              </button>
+              <button class="command art-command" type="button" data-art="sparkLance" data-cost="10">
+                <span class="command-icon spark" aria-hidden="true">ϟ</span>
+                <span class="command-copy"><strong>Spark Lance</strong><small>Lightning strike · may disrupt</small></span>
+                <span class="cost">10 TP</span>
+              </button>
+              <button class="command art-command" type="button" data-art="timeMend" data-cost="8">
+                <span class="command-icon mend" aria-hidden="true">◎</span>
+                <span class="command-copy"><strong>Time Mend</strong><small>Rewind wounds · restore HP</small></span>
+                <span class="cost">8 TP</span>
+              </button>
+              <button class="command back-command" type="button" data-action="back">
+                <span class="command-icon" aria-hidden="true">←</span>
+                <span class="command-copy"><strong>Back</strong><small>Return to battle commands</small></span>
+                <kbd>Esc</kbd>
+              </button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <footer class="game-footer">
+        <p><span aria-hidden="true">⌁</span> Choose a command or use A / S / D / F.</p>
+        <p><a class="readme-link" href="README.md" target="_blank" rel="noopener">README + controls</a> · Progress resets on refresh</p>
+      </footer>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
